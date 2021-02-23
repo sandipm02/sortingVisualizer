@@ -1,4 +1,5 @@
 import { Component, React } from 'react'
+import './style/style.css'
 
 class App extends Component {
 
@@ -10,6 +11,10 @@ class App extends Component {
     }
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handleArraySizeChange = this.handleArraySizeChange.bind(this);
+  }
+
+  componentDidMount() {
+    console.log(this.chartReference);
   }
 
   handleDropdownChange(e) {
@@ -24,16 +29,46 @@ class App extends Component {
     this.setState({ default: false });
   }
 
-  handleSubmit() {
-    console.log("Submit Clicked")
-  }
-
-
-
   render() {
+    let arraySize = this.state.arraySize;
+    let min = 1;
+    let max = 100;
+
+    let array = [arraySize];
+    let sortedArray = [arraySize];
+
+    generateArray();
+
+    function generateArray() {
+      for (var i = 0; i < arraySize; i++) {
+        array[i] = generateArrayValue(min, max);
+        if (array[i] === array[i - 1]) {
+          array[i] = generateArrayValue(min, max);
+        }
+      }
+    }
+
+    function generateArrayValue(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    bubbleSort();
+
+    function bubbleSort() {
+      sortedArray = Array.from(array);
+
+      for (var i = 0; i < arraySize; i++) {
+        for (var j = 0; j < arraySize - 1; j++) {
+          if (sortedArray[j] > sortedArray[j + 1]) {
+            let x = sortedArray[j];
+            sortedArray[j] = sortedArray[j + 1];
+            sortedArray[j + 1] = x;
+          }
+        }
+      }
+    }
+
     return (
-
-
       <div>
         <h1>Array Sorting Algo</h1>
 
@@ -49,9 +84,9 @@ class App extends Component {
           <option value="40">40</option>
           <option value="50">50</option>
         </select>
-
-        <button onClick={this.handleSubmit}> Sort </button>
       </div>
+
+
     );
   }
 }
